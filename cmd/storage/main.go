@@ -13,5 +13,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("file uploaded", file)
+
+	restoredFile, err := st.FileById(file.ID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("file restored", restoredFile)
 }

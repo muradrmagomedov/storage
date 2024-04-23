@@ -1,17 +1,35 @@
 package storage
 
-import "supamod/internal/file"
+import (
+	"fmt"
+	"supamod/internal/file"
 
-type Storage struct{}
+	"github.com/google/uuid"
+)
+
+type Storage struct {
+	Files map[uuid.UUID]*file.File
+}
 
 func NewStorage() *Storage {
-	return &Storage{}
+	return &Storage{
+		Files: make(map[uuid.UUID]*file.File),
+	}
 }
 
 func (s *Storage) Upload(filename string, blob []byte) (*file.File, error) {
-	return file.NewFile(filename, blob)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return newFile, err
+	newFile, err := file.NewFile(filename, blob)
+	if err != nil {
+		return nil, err
+	}
+	s.Files[newFile.ID] = newFile
+
+	return newFile, err
+}
+func (s *Storage) FileById(fileID uuid.UUID) (*file.File, error) {
+	foundFile, ok := s.Files[fileID]
+	if !ok {
+		return nil, fmt.Errorf("file %v not found", foundFile)
+	}
+	return foundFile, nil
 }
