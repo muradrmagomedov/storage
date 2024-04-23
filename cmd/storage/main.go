@@ -8,4 +8,10 @@ import (
 func main() {
 	st := storage.NewStorage()
 	fmt.Println("hello there!", *st)
+
+	file, err := st.Upload("newfile.txt", []byte("it s a me, mario!"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("file uploaded", file)
 }
